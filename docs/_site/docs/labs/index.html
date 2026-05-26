@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labs — OpsFlux</title>
+  <meta name="description" content="Learning DevOps, SRE & Cloud Engineering Through Real Infrastructure">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Labs | OpsFlux</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Labs" />
+<meta name="author" content="OpsFlux" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning DevOps, SRE &amp; Cloud Engineering Through Real Infrastructure" />
+<meta property="og:description" content="Learning DevOps, SRE &amp; Cloud Engineering Through Real Infrastructure" />
+<link rel="canonical" href="http://0.0.0.0:4000/docs/labs/" />
+<meta property="og:url" content="http://0.0.0.0:4000/docs/labs/" />
+<meta property="og:site_name" content="OpsFlux" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Labs" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"OpsFlux"},"description":"Learning DevOps, SRE &amp; Cloud Engineering Through Real Infrastructure","headline":"Labs","url":"http://0.0.0.0:4000/docs/labs/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="OpsFlux" />
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Ops<span>Flux</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/learning/">Learning</a></li>
+    <li><a href="/projects/">Projects</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="https://github.com/opsflux-labs" target="_blank" class="nav-cta">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<main>
+  <section class="section">
+  <p class="section-label">// Daily Labs</p>
+  <h1 class="section-title">All Labs</h1>
+  <p class="section-sub">Every entry is a real infrastructure scenario — production tickets, debugging challenges, and automation tasks documented end-to-end.</p>
+
+  <div class="labs-filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="kubernetes">Kubernetes</button>
+    <button class="filter-btn" data-filter="terraform">Terraform</button>
+    <button class="filter-btn" data-filter="docker">Docker</button>
+    <button class="filter-btn" data-filter="ci-cd">CI/CD</button>
+    <button class="filter-btn" data-filter="monitoring">Monitoring</button>
+    <button class="filter-btn" data-filter="linux">Linux</button>
+    <button class="filter-btn" data-filter="gcp">GCP</button>
+  </div>
+
+  <div class="labs-grid" id="labs-grid">
+    
+    
+    <a href="/labs/2026-05-26-crashloopbackoff-debug/" class="lab-card" data-tags="kubernetes debugging liveness-probe">
+      <div class="lab-card-meta">
+        <span class="difficulty diff-intermediate">intermediate</span>
+        <span class="lab-card-date">May 26, 2026</span>
+      </div>
+      <div class="lab-card-title">Debugging a CrashLoopBackOff in Kubernetes</div>
+      <div class="lab-card-summary">Diagnosed and resolved a CrashLoopBackOff caused by a misconfigured liveness probe and missing environment variable in a production-style deployment.</div>
+      <div class="lab-card-footer">
+        
+        <span class="tag">kubernetes</span>
+        
+        <span class="tag">debugging</span>
+        
+        <span class="tag">liveness-probe</span>
+        
+        <span class="lab-card-read">Read →</span>
+      </div>
+    </a>
+    
+    <a href="/labs/2026-05-25-terraform-gcp-vpc/" class="lab-card" data-tags="terraform gcp networking iac">
+      <div class="lab-card-meta">
+        <span class="difficulty diff-intermediate">intermediate</span>
+        <span class="lab-card-date">May 25, 2026</span>
+      </div>
+      <div class="lab-card-title">Provisioning a GCP VPC with Terraform Modules</div>
+      <div class="lab-card-summary">Wrote a reusable Terraform module to provision a custom VPC network on GCP with private subnets, Cloud NAT, and firewall rules following the principle of least privilege.</div>
+      <div class="lab-card-footer">
+        
+        <span class="tag">terraform</span>
+        
+        <span class="tag">gcp</span>
+        
+        <span class="tag">networking</span>
+        
+        <span class="tag">iac</span>
+        
+        <span class="lab-card-read">Read →</span>
+      </div>
+    </a>
+    
+    <a href="/labs/2026-05-24-docker-github-actions/" class="lab-card" data-tags="ci-cd docker github-actions security">
+      <div class="lab-card-meta">
+        <span class="difficulty diff-beginner">beginner</span>
+        <span class="lab-card-date">May 24, 2026</span>
+      </div>
+      <div class="lab-card-title">Building a Docker CI Pipeline with GitHub Actions</div>
+      <div class="lab-card-summary">Set up a GitHub Actions workflow that builds a Docker image, runs a Trivy security scan, and pushes to Google Artifact Registry on every merge to main.</div>
+      <div class="lab-card-footer">
+        
+        <span class="tag">ci-cd</span>
+        
+        <span class="tag">docker</span>
+        
+        <span class="tag">github-actions</span>
+        
+        <span class="tag">security</span>
+        
+        <span class="lab-card-read">Read →</span>
+      </div>
+    </a>
+    
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('.lab-card').forEach(card => {
+        if (filter === 'all' || card.dataset.tags.includes(filter)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+
+</main>
+
+<footer>
+  <span>© 2026 <a href="/">OpsFlux</a> — Personal Engineering Lab</span>
+  <span>Built with real infrastructure · No toy examples</span>
+  <div style="display:flex;gap:20px">
+    <a href="/">Home</a>
+    <a href="/labs/">Labs</a>
+    <a href="https://github.com/opsflux-labs" target="_blank">GitHub ↗</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home — OpsFlux</title>
+  <meta name="description" content="Learning DevOps, SRE & Cloud Engineering Through Real Infrastructure">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Home | OpsFlux</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Home" />
+<meta name="author" content="OpsFlux" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning DevOps, SRE &amp; Cloud Engineering Through Real Infrastructure" />
+<meta property="og:description" content="Learning DevOps, SRE &amp; Cloud Engineering Through Real Infrastructure" />
+<link rel="canonical" href="http://0.0.0.0:4000/" />
+<meta property="og:url" content="http://0.0.0.0:4000/" />
+<meta property="og:site_name" content="OpsFlux" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Home" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"OpsFlux"},"description":"Learning DevOps, SRE &amp; Cloud Engineering Through Real Infrastructure","headline":"Home","name":"OpsFlux","url":"http://0.0.0.0:4000/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="OpsFlux" />
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Ops<span>Flux</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/learning/">Learning</a></li>
+    <li><a href="/projects/">Projects</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="https://github.com/opsflux-labs" target="_blank" class="nav-cta">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<main>
+  <section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Personal Engineering Lab</div>
+    <h1 class="hero-title">
+      <span class="line">Master</span>
+      <span class="line hl">DevOps, SRE</span>
+      <span class="line hl2">&amp; Cloud</span>
+      <span class="line">Engineering</span>
+    </h1>
+    <p class="hero-desc">
+      Real infrastructure. Real tickets. Real problems.<br>
+      Build, automate, and troubleshoot with <strong>Linux, Kubernetes, Terraform, Docker,</strong> and <strong>GCP</strong> — not toy examples.
+    </p>
+    <div class="btn-group">
+      <a href="https://github.com/opsflux-labs" target="_blank" class="btn btn-primary">⎋ GitHub Repository</a>
+      <a href="/labs/" class="btn btn-secondary">→ Daily Labs</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="terminal-title">opsflux ~ production</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">❯</span><span class="t-cmd">kubectl get pods -n production</span></div>
+        <div class="t-line"><span class="t-output">NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;STATUS</span></div>
+        <div class="t-line"><span class="t-output t-success">api-gateway-7d9f8b-xkp2q&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;Running ✓</span></div>
+        <div class="t-line"><span class="t-output t-warn">metrics-srv-2b3c-lpqrs&nbsp;&nbsp;&nbsp;0/1&nbsp;&nbsp;&nbsp;Pending ⚠</span></div>
+        <div class="t-line" style="margin-top:8px"><span class="t-prompt">❯</span><span class="t-cmd">terraform plan -out=prod.tfplan</span></div>
+        <div class="t-line"><span class="t-output t-success">Plan: 3 to add, 1 to change, 0 to destroy.</span></div>
+        <div class="t-line" style="margin-top:8px"><span class="t-prompt">❯</span><span class="t-cmd"><span class="cursor-blink"></span></span></div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Labs</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">8</span>
+        <span class="stat-label">Tech Stacks</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Real Infra</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recent Labs -->
+<section class="section" style="padding-top:0">
+  <p class="section-label">// Recent Labs</p>
+  <h2 class="section-title">Latest Entries</h2>
+  <div class="labs-grid">
+    
+    
+    <a href="/labs/2026-05-26-crashloopbackoff-debug/" class="lab-card">
+      <div class="lab-card-meta">
+        <span class="difficulty diff-intermediate">intermediate</span>
+        <span class="lab-card-date">May 26, 2026</span>
+      </div>
+      <div class="lab-card-title">Debugging a CrashLoopBackOff in Kubernetes</div>
+      <div class="lab-card-summary">Diagnosed and resolved a CrashLoopBackOff caused by a misconfigured liveness probe and missing environment variable in a production-style deployment.</div>
+      <div class="lab-card-footer">
+        
+        <span class="tag">kubernetes</span>
+        
+        <span class="tag">debugging</span>
+        
+        <span class="tag">liveness-probe</span>
+        
+        <span class="lab-card-read">Read →</span>
+      </div>
+    </a>
+    
+    <a href="/labs/2026-05-25-terraform-gcp-vpc/" class="lab-card">
+      <div class="lab-card-meta">
+        <span class="difficulty diff-intermediate">intermediate</span>
+        <span class="lab-card-date">May 25, 2026</span>
+      </div>
+      <div class="lab-card-title">Provisioning a GCP VPC with Terraform Modules</div>
+      <div class="lab-card-summary">Wrote a reusable Terraform module to provision a custom VPC network on GCP with private subnets, Cloud NAT, and firewall rules following the principle of least privilege.</div>
+      <div class="lab-card-footer">
+        
+        <span class="tag">terraform</span>
+        
+        <span class="tag">gcp</span>
+        
+        <span class="tag">networking</span>
+        
+        <span class="lab-card-read">Read →</span>
+      </div>
+    </a>
+    
+    <a href="/labs/2026-05-24-docker-github-actions/" class="lab-card">
+      <div class="lab-card-meta">
+        <span class="difficulty diff-beginner">beginner</span>
+        <span class="lab-card-date">May 24, 2026</span>
+      </div>
+      <div class="lab-card-title">Building a Docker CI Pipeline with GitHub Actions</div>
+      <div class="lab-card-summary">Set up a GitHub Actions workflow that builds a Docker image, runs a Trivy security scan, and pushes to Google Artifact Registry on every merge to main.</div>
+      <div class="lab-card-footer">
+        
+        <span class="tag">ci-cd</span>
+        
+        <span class="tag">docker</span>
+        
+        <span class="tag">github-actions</span>
+        
+        <span class="lab-card-read">Read →</span>
+      </div>
+    </a>
+    
+  </div>
+  <div style="margin-top:32px">
+    <a href="/labs/" class="btn btn-secondary">View All Labs →</a>
+  </div>
+</section>
+
+<style>
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 100px 48px 60px;
+  gap: 60px;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  padding: 6px 14px;
+  border: 1px solid rgba(0,200,255,0.25);
+  border-radius: 2px;
+  background: rgba(0,200,255,0.04);
+}
+.hero-tag::before { content: '//'; opacity: 0.5; }
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+}
+.hero-title .line { display: block; }
+.hero-title .hl { color: var(--accent); }
+.hero-title .hl2 { color: var(--accent3); }
+.hero-desc {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 440px;
+  margin-bottom: 40px;
+}
+.hero-desc strong { color: var(--text); font-weight: 500; }
+.btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-visual { display: flex; flex-direction: column; gap: 16px; }
+.terminal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--glow), 0 40px 80px rgba(0,0,0,0.4);
+}
+.terminal-bar {
+  background: var(--surface2);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-r { background: #ff5f56; }
+.dot-y { background: #ffbd2e; }
+.dot-g { background: #27c93f; }
+.terminal-title { font-size: 11px; color: var(--muted); margin: 0 auto; letter-spacing: 0.05em; }
+.terminal-body { padding: 20px 24px; font-size: 12px; line-height: 2; }
+.t-line { display: flex; gap: 12px; align-items: flex-start; }
+.t-prompt { color: var(--accent3); flex-shrink: 0; }
+.t-cmd { color: var(--text); }
+.t-output { color: var(--accent); padding-left: 24px; }
+.t-success { color: var(--accent3); }
+.t-warn { color: #ffbd2e; }
+.cursor-blink {
+  display: inline-block; width: 7px; height: 14px;
+  background: var(--accent); margin-left: 2px;
+  animation: blink 1s step-end infinite; vertical-align: text-bottom;
+}
+@keyframes blink { 50% { opacity: 0; } }
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: var(--accent); }
+.stat-num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--accent); display: block; }
+.stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+</style>
+
+</main>
+
+<footer>
+  <span>© 2026 <a href="/">OpsFlux</a> — Personal Engineering Lab</span>
+  <span>Built with real infrastructure · No toy examples</span>
+  <div style="display:flex;gap:20px">
+    <a href="/">Home</a>
+    <a href="/labs/">Labs</a>
+    <a href="https://github.com/opsflux-labs" target="_blank">GitHub ↗</a>
+  </div>
+</footer>
+
+</body>
+</html>

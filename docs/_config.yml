@@ -1,0 +1,31 @@
+title: OpsFlux
+description: Learning DevOps, SRE & Cloud Engineering Through Real Infrastructure
+url: "https://lab.opsflux.in"
+baseurl: ""
+
+author:
+  name: OpsFlux
+  github: opsflux-labs
+
+collections:
+  labs:
+    output: true
+    permalink: /labs/:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: labs
+    values:
+      layout: lab
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+markdown: kramdown
+highlighter: rouge
+
+exclude:
+  - Gemfile
+  - Gemfile.lock

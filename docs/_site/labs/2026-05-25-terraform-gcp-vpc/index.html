@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Provisioning a GCP VPC with Terraform Modules — OpsFlux</title>
+  <meta name="description" content="Wrote a reusable Terraform module to provision a custom VPC network on GCP with private subnets, Cloud NAT, and firewall rules following the principle of least privilege.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Provisioning a GCP VPC with Terraform Modules | OpsFlux</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Provisioning a GCP VPC with Terraform Modules" />
+<meta name="author" content="OpsFlux" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Scenario" />
+<meta property="og:description" content="Scenario" />
+<link rel="canonical" href="http://0.0.0.0:4000/labs/2026-05-25-terraform-gcp-vpc/" />
+<meta property="og:url" content="http://0.0.0.0:4000/labs/2026-05-25-terraform-gcp-vpc/" />
+<meta property="og:site_name" content="OpsFlux" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-05-25T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Provisioning a GCP VPC with Terraform Modules" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"OpsFlux"},"dateModified":"2026-05-25T00:00:00+00:00","datePublished":"2026-05-25T00:00:00+00:00","description":"Scenario","headline":"Provisioning a GCP VPC with Terraform Modules","mainEntityOfPage":{"@type":"WebPage","@id":"http://0.0.0.0:4000/labs/2026-05-25-terraform-gcp-vpc/"},"url":"http://0.0.0.0:4000/labs/2026-05-25-terraform-gcp-vpc/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="OpsFlux" />
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Ops<span>Flux</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/learning/">Learning</a></li>
+    <li><a href="/projects/">Projects</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="https://github.com/opsflux-labs" target="_blank" class="nav-cta">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<main>
+  <article class="lab-post">
+  <div class="lab-post-header">
+    <div class="lab-meta-top">
+      <a href="/labs/" class="back-link">← All Labs</a>
+      <span class="lab-date">May 25, 2026</span>
+    </div>
+
+    <h1 class="lab-post-title">Provisioning a GCP VPC with Terraform Modules</h1>
+    <p class="lab-post-summary">Wrote a reusable Terraform module to provision a custom VPC network on GCP with private subnets, Cloud NAT, and firewall rules following the principle of least privilege.</p>
+
+    <div class="lab-post-meta">
+      <span class="difficulty diff-intermediate">intermediate</span>
+      <span class="duration">⏱ 60 mins</span>
+      <div class="tag-list">
+        
+        <span class="tag">terraform</span>
+        
+        <span class="tag">gcp</span>
+        
+        <span class="tag">networking</span>
+        
+        <span class="tag">iac</span>
+        
+      </div>
+    </div>
+
+    
+    <a href="https://github.com/opsflux-labs/daily-labs/tree/main/terraform/gcp-vpc-module" target="_blank" class="btn btn-primary" style="margin-top:24px;display:inline-flex">⎋ View on GitHub</a>
+    
+  </div>
+
+  <div class="lab-post-body">
+    <h2 id="scenario">Scenario</h2>
+
+<p>Set up a production-grade VPC on GCP that follows least-privilege networking principles — private subnets only, outbound internet via Cloud NAT, no public IPs on compute instances.</p>
+
+<h2 id="module-structure">Module Structure</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>modules/
+  gcp-vpc/
+    main.tf
+    variables.tf
+    outputs.tf
+</code></pre></div></div>
+
+<h2 id="implementation">Implementation</h2>
+
+<p><strong><code class="language-plaintext highlighter-rouge">variables.tf</code></strong> — define inputs:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">variable</span> <span class="s2">"project_id"</span> <span class="p">{</span>
+  <span class="nx">type</span>        <span class="p">=</span> <span class="nx">string</span>
+  <span class="nx">description</span> <span class="p">=</span> <span class="s2">"GCP project ID"</span>
+<span class="p">}</span>
+
+<span class="nx">variable</span> <span class="s2">"region"</span> <span class="p">{</span>
+  <span class="nx">type</span>    <span class="p">=</span> <span class="nx">string</span>
+  <span class="nx">default</span> <span class="p">=</span> <span class="s2">"asia-south1"</span>
+<span class="p">}</span>
+
+<span class="nx">variable</span> <span class="s2">"subnet_cidr"</span> <span class="p">{</span>
+  <span class="nx">type</span>    <span class="p">=</span> <span class="nx">string</span>
+  <span class="nx">default</span> <span class="p">=</span> <span class="s2">"10.10.0.0/24"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong><code class="language-plaintext highlighter-rouge">main.tf</code></strong> — VPC, subnet, NAT, firewall:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">resource</span> <span class="s2">"google_compute_network"</span> <span class="s2">"vpc"</span> <span class="p">{</span>
+  <span class="nx">name</span>                    <span class="p">=</span> <span class="s2">"opsflux-vpc"</span>
+  <span class="nx">auto_create_subnetworks</span> <span class="p">=</span> <span class="kc">false</span>
+  <span class="nx">project</span>                 <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">project_id</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"google_compute_subnetwork"</span> <span class="s2">"private"</span> <span class="p">{</span>
+  <span class="nx">name</span>          <span class="p">=</span> <span class="s2">"opsflux-private-subnet"</span>
+  <span class="nx">ip_cidr_range</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">subnet_cidr</span>
+  <span class="nx">region</span>        <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">region</span>
+  <span class="nx">network</span>       <span class="p">=</span> <span class="nx">google_compute_network</span><span class="err">.</span><span class="nx">vpc</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">project</span>       <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">project_id</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"google_compute_router"</span> <span class="s2">"router"</span> <span class="p">{</span>
+  <span class="nx">name</span>    <span class="p">=</span> <span class="s2">"opsflux-router"</span>
+  <span class="nx">region</span>  <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">region</span>
+  <span class="nx">network</span> <span class="p">=</span> <span class="nx">google_compute_network</span><span class="err">.</span><span class="nx">vpc</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">project</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">project_id</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"google_compute_router_nat"</span> <span class="s2">"nat"</span> <span class="p">{</span>
+  <span class="nx">name</span>                               <span class="p">=</span> <span class="s2">"opsflux-nat"</span>
+  <span class="nx">router</span>                             <span class="p">=</span> <span class="nx">google_compute_router</span><span class="err">.</span><span class="nx">router</span><span class="err">.</span><span class="nx">name</span>
+  <span class="nx">region</span>                             <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">region</span>
+  <span class="nx">nat_ip_allocate_option</span>             <span class="p">=</span> <span class="s2">"AUTO_ONLY"</span>
+  <span class="nx">source_subnetwork_ip_ranges_to_nat</span> <span class="p">=</span> <span class="s2">"ALL_SUBNETWORKS_ALL_IP_RANGES"</span>
+  <span class="nx">project</span>                            <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">project_id</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="plan--apply">Plan &amp; Apply</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>terraform init
+terraform plan <span class="nt">-var</span><span class="o">=</span><span class="s2">"project_id=opsflux-prod"</span>
+terraform apply <span class="nt">-var</span><span class="o">=</span><span class="s2">"project_id=opsflux-prod"</span> <span class="nt">-auto-approve</span>
+</code></pre></div></div>
+
+<p>Output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
+</code></pre></div></div>
+
+<h2 id="verification">Verification</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gcloud compute networks list <span class="nt">--project</span><span class="o">=</span>opsflux-prod
+gcloud compute routers nats list <span class="nt">--router</span><span class="o">=</span>opsflux-router <span class="nt">--region</span><span class="o">=</span>asia-south1
+</code></pre></div></div>
+
+<h2 id="key-learnings">Key Learnings</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">auto_create_subnetworks = false</code> is essential for custom VPC layouts</li>
+  <li>Cloud NAT must be attached to a Router, not directly to the VPC</li>
+  <li>Always use variables + outputs for reusable modules — hardcoding project IDs breaks reuse</li>
+</ul>
+
+<hr />
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td><strong>Time taken:</strong> 60 minutes</td>
+        <td><strong>Difficulty:</strong> Intermediate</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+  </div>
+</article>
+
+</main>
+
+<footer>
+  <span>© 2026 <a href="/">OpsFlux</a> — Personal Engineering Lab</span>
+  <span>Built with real infrastructure · No toy examples</span>
+  <div style="display:flex;gap:20px">
+    <a href="/">Home</a>
+    <a href="/labs/">Labs</a>
+    <a href="https://github.com/opsflux-labs" target="_blank">GitHub ↗</a>
+  </div>
+</footer>
+
+</body>
+</html>

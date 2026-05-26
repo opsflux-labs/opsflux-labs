@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debugging a CrashLoopBackOff in Kubernetes — OpsFlux</title>
+  <meta name="description" content="Diagnosed and resolved a CrashLoopBackOff caused by a misconfigured liveness probe and missing environment variable in a production-style deployment.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Debugging a CrashLoopBackOff in Kubernetes | OpsFlux</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Debugging a CrashLoopBackOff in Kubernetes" />
+<meta name="author" content="OpsFlux" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Scenario" />
+<meta property="og:description" content="Scenario" />
+<link rel="canonical" href="http://0.0.0.0:4000/labs/2026-05-26-crashloopbackoff-debug/" />
+<meta property="og:url" content="http://0.0.0.0:4000/labs/2026-05-26-crashloopbackoff-debug/" />
+<meta property="og:site_name" content="OpsFlux" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-05-26T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Debugging a CrashLoopBackOff in Kubernetes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"OpsFlux"},"dateModified":"2026-05-26T00:00:00+00:00","datePublished":"2026-05-26T00:00:00+00:00","description":"Scenario","headline":"Debugging a CrashLoopBackOff in Kubernetes","mainEntityOfPage":{"@type":"WebPage","@id":"http://0.0.0.0:4000/labs/2026-05-26-crashloopbackoff-debug/"},"url":"http://0.0.0.0:4000/labs/2026-05-26-crashloopbackoff-debug/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="OpsFlux" />
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Ops<span>Flux</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/learning/">Learning</a></li>
+    <li><a href="/projects/">Projects</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="https://github.com/opsflux-labs" target="_blank" class="nav-cta">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<main>
+  <article class="lab-post">
+  <div class="lab-post-header">
+    <div class="lab-meta-top">
+      <a href="/labs/" class="back-link">← All Labs</a>
+      <span class="lab-date">May 26, 2026</span>
+    </div>
+
+    <h1 class="lab-post-title">Debugging a CrashLoopBackOff in Kubernetes</h1>
+    <p class="lab-post-summary">Diagnosed and resolved a CrashLoopBackOff caused by a misconfigured liveness probe and missing environment variable in a production-style deployment.</p>
+
+    <div class="lab-post-meta">
+      <span class="difficulty diff-intermediate">intermediate</span>
+      <span class="duration">⏱ 45 mins</span>
+      <div class="tag-list">
+        
+        <span class="tag">kubernetes</span>
+        
+        <span class="tag">debugging</span>
+        
+        <span class="tag">liveness-probe</span>
+        
+      </div>
+    </div>
+
+    
+    <a href="https://github.com/opsflux-labs/daily-labs/tree/main/kubernetes/crashloopbackoff-debug" target="_blank" class="btn btn-primary" style="margin-top:24px;display:inline-flex">⎋ View on GitHub</a>
+    
+  </div>
+
+  <div class="lab-post-body">
+    <h2 id="scenario">Scenario</h2>
+
+<p>A ticket came in: the <code class="language-plaintext highlighter-rouge">api-gateway</code> pod in the <code class="language-plaintext highlighter-rouge">production</code> namespace keeps restarting. The app team says it was working fine yesterday. No code changes were made.</p>
+
+<h2 id="investigation">Investigation</h2>
+
+<p>First, check the pod status:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get pods <span class="nt">-n</span> production
+</code></pre></div></div>
+
+<p>Output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NAME                          READY   STATUS             RESTARTS   AGE
+api-gateway-7d9f8b-xkp2q     0/1     CrashLoopBackOff   8          12m
+</code></pre></div></div>
+
+<p>Check the logs from the crashing container:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl logs api-gateway-7d9f8b-xkp2q <span class="nt">-n</span> production <span class="nt">--previous</span>
+</code></pre></div></div>
+
+<p>Output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error: DATABASE_URL environment variable is not set
+Process exited with code 1
+</code></pre></div></div>
+
+<p>Check the deployment spec:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl describe deployment api-gateway <span class="nt">-n</span> production
+</code></pre></div></div>
+
+<p>The liveness probe was also hitting <code class="language-plaintext highlighter-rouge">/healthz</code> after only 5 seconds — before the app had time to start.</p>
+
+<h2 id="root-cause">Root Cause</h2>
+
+<p>Two issues found:</p>
+
+<ol>
+  <li><strong>Missing env var</strong> — A recent ConfigMap update accidentally removed <code class="language-plaintext highlighter-rouge">DATABASE_URL</code></li>
+  <li><strong>Aggressive liveness probe</strong> — <code class="language-plaintext highlighter-rouge">initialDelaySeconds</code> was set to <code class="language-plaintext highlighter-rouge">5</code> instead of <code class="language-plaintext highlighter-rouge">30</code></li>
+</ol>
+
+<h2 id="fix">Fix</h2>
+
+<p>Patch the ConfigMap to restore the missing variable:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl edit configmap app-config <span class="nt">-n</span> production
+</code></pre></div></div>
+
+<p>Add back:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">DATABASE_URL</span><span class="pi">:</span> <span class="s2">"</span><span class="s">postgres://db-service:5432/appdb"</span>
+</code></pre></div></div>
+
+<p>Update the liveness probe in the deployment:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">livenessProbe</span><span class="pi">:</span>
+  <span class="na">httpGet</span><span class="pi">:</span>
+    <span class="na">path</span><span class="pi">:</span> <span class="s">/healthz</span>
+    <span class="na">port</span><span class="pi">:</span> <span class="m">8080</span>
+  <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">30</span>
+  <span class="na">periodSeconds</span><span class="pi">:</span> <span class="m">10</span>
+  <span class="na">failureThreshold</span><span class="pi">:</span> <span class="m">3</span>
+</code></pre></div></div>
+
+<p>Apply and verify:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl rollout restart deployment/api-gateway <span class="nt">-n</span> production
+kubectl get pods <span class="nt">-n</span> production <span class="nt">-w</span>
+</code></pre></div></div>
+
+<h2 id="result">Result</h2>
+
+<p>Pod stabilized within 60 seconds. No further restarts.</p>
+
+<h2 id="key-learnings">Key Learnings</h2>
+
+<ul>
+  <li>Always check <code class="language-plaintext highlighter-rouge">--previous</code> logs on a CrashLoopBackOff — the current container may not have logs yet</li>
+  <li><code class="language-plaintext highlighter-rouge">initialDelaySeconds</code> should always exceed your app’s startup time</li>
+  <li>ConfigMap changes don’t auto-reload — pods need a restart to pick up new values</li>
+</ul>
+
+<hr />
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td><strong>Time taken:</strong> 45 minutes</td>
+        <td><strong>Difficulty:</strong> Intermediate</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+  </div>
+</article>
+
+</main>
+
+<footer>
+  <span>© 2026 <a href="/">OpsFlux</a> — Personal Engineering Lab</span>
+  <span>Built with real infrastructure · No toy examples</span>
+  <div style="display:flex;gap:20px">
+    <a href="/">Home</a>
+    <a href="/labs/">Labs</a>
+    <a href="https://github.com/opsflux-labs" target="_blank">GitHub ↗</a>
+  </div>
+</footer>
+
+</body>
+</html>

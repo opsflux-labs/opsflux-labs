@@ -1,0 +1,58 @@
+---
+layout: default
+title: Labs
+---
+
+<section class="section">
+  <p class="section-label">// Daily Labs</p>
+  <h1 class="section-title">All Labs</h1>
+  <p class="section-sub">Every entry is a real infrastructure scenario — production tickets, debugging challenges, and automation tasks documented end-to-end.</p>
+
+  <div class="labs-filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="kubernetes">Kubernetes</button>
+    <button class="filter-btn" data-filter="terraform">Terraform</button>
+    <button class="filter-btn" data-filter="docker">Docker</button>
+    <button class="filter-btn" data-filter="ci-cd">CI/CD</button>
+    <button class="filter-btn" data-filter="monitoring">Monitoring</button>
+    <button class="filter-btn" data-filter="linux">Linux</button>
+    <button class="filter-btn" data-filter="gcp">GCP</button>
+  </div>
+
+  <div class="labs-grid" id="labs-grid">
+    {% assign sorted_labs = site.labs | sort: 'date' | reverse %}
+    {% for lab in sorted_labs %}
+    <a href="{{ lab.url | relative_url }}" class="lab-card" data-tags="{{ lab.tags | join: ' ' }}">
+      <div class="lab-card-meta">
+        <span class="difficulty diff-{{ lab.difficulty }}">{{ lab.difficulty }}</span>
+        <span class="lab-card-date">{{ lab.date | date: "%b %d, %Y" }}</span>
+      </div>
+      <div class="lab-card-title">{{ lab.title }}</div>
+      <div class="lab-card-summary">{{ lab.summary }}</div>
+      <div class="lab-card-footer">
+        {% for tag in lab.tags limit:4 %}
+        <span class="tag">{{ tag }}</span>
+        {% endfor %}
+        <span class="lab-card-read">Read →</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('.lab-card').forEach(card => {
+        if (filter === 'all' || card.dataset.tags.includes(filter)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

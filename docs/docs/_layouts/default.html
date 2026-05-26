@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if page.title %}{{ page.title }} — OpsFlux{% else %}{{ site.title }}{% endif %}</title>
+  <meta name="description" content="{% if page.summary %}{{ page.summary }}{% else %}{{ site.description }}{% endif %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  {% seo %}
+  {% feed_meta %}
+</head>
+<body>
+
+<nav>
+  <a href="{{ '/' | relative_url }}" class="logo">Ops<span>Flux</span></a>
+  <ul class="nav-links">
+    <li><a href="{{ '/' | relative_url }}">Home</a></li>
+    <li><a href="{{ '/learning/' | relative_url }}">Learning</a></li>
+    <li><a href="{{ '/projects/' | relative_url }}">Projects</a></li>
+    <li><a href="{{ '/labs/' | relative_url }}">Labs</a></li>
+    <li><a href="https://github.com/opsflux-labs" target="_blank" class="nav-cta">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<main>
+  {{ content }}
+</main>
+
+<footer>
+  <span>© {{ 'now' | date: "%Y" }} <a href="{{ '/' | relative_url }}">OpsFlux</a> — Personal Engineering Lab</span>
+  <span>Built with real infrastructure · No toy examples</span>
+  <div style="display:flex;gap:20px">
+    <a href="{{ '/' | relative_url }}">Home</a>
+    <a href="{{ '/labs/' | relative_url }}">Labs</a>
+    <a href="https://github.com/opsflux-labs" target="_blank">GitHub ↗</a>
+  </div>
+</footer>
+
+</body>
+</html>
