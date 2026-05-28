@@ -18,11 +18,6 @@ cat > "$FILENAME" << EOF
 ---
 title: "${TICKET:+$TICKET: }$TITLE"
 date: $DATE
-summary: "Brief one line summary of what was done."
-difficulty: beginner
-duration: 45 mins
-tags: [linux, gcp]
-github_link: https://github.com/opsflux-labs/opsflux-app/tree/main/
 ---
 
 ## Scenario
