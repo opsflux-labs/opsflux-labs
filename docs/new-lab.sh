@@ -1,56 +1,77 @@
 #!/bin/bash
-# new-lab.sh — run this from inside docs/ to create a new lab entry
-# Usage: ./new-lab.sh "Debugging OOMKilled pods in Kubernetes"
+# new-lab.sh — run from ~/opsflux-labs/docs/
+# Usage: bash new-lab.sh "Lab Title" "TICKET-001"
 
 TITLE="$1"
+TICKET="$2"
 
 if [ -z "$TITLE" ]; then
-  echo "Usage: ./new-lab.sh \"Your Lab Title Here\""
+  echo "Usage: bash new-lab.sh \"Your Lab Title\" \"TICKET-001\""
   exit 1
 fi
 
 DATE=$(date +%Y-%m-%d)
 SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g' | sed 's/[^a-z0-9-]//g')
-FILENAME="_labs/${DATE}-${SLUG}.md"
+FILENAME="docs/_labs/${DATE}-${SLUG}.md"
 
 cat > "$FILENAME" << EOF
 ---
-title: "$TITLE"
+title: "${TICKET:+$TICKET: }$TITLE"
 date: $DATE
-summary: "One or two sentences describing what you built or debugged."
-difficulty: intermediate
-duration: 45 mins
-tags: [kubernetes, debugging]
-github_link: https://github.com/opsflux-labs/opsflux-app/tree/main/kubernetes/
+summary: "Brief one-line description of what this lab covers"
+difficulty: beginner
+duration: 60 mins
+tags:
+  - linux
+  - gcp
+github_link: ""
 ---
 
 ## Scenario
 
-Describe the ticket or problem here.
+Describe the JIRA ticket and production context here.
 
 ## Investigation
 
-What did you check first?
-
+### Phase 1 — Name
 \`\`\`bash
-# commands you ran
+# commands here
 \`\`\`
+
+**Output:**
+\`\`\`
+paste output here
+\`\`\`
+
+**What this means:**
+Explain the output in production context.
 
 ## Root Cause
 
-What was the actual problem?
+What was found or confirmed.
 
 ## Fix
 
-How did you fix it?
-
 \`\`\`bash
-# fix commands
+# fix commands if any
 \`\`\`
 
 ## Result
 
-What happened after the fix?
+What was validated and confirmed working.
+
+## Challenges
+
+### Challenge 1 — Name
+**Command:**
+\`\`\`bash
+# command used
+\`\`\`
+**Output:**
+\`\`\`
+paste output
+\`\`\`
+**Finding:** one line summary
 
 ## Key Learnings
 
@@ -58,10 +79,13 @@ What happened after the fix?
 - Learning 2
 - Learning 3
 
----
+## Command Reference
 
-> **Time taken:** 45 minutes | **Difficulty:** Intermediate
+| Command | What it does | When to use |
+|---|---|---|
+| \`command\` | description | when |
+
 EOF
 
-echo "✓ Created: $FILENAME"
-echo "→ Open it in VS Code and start writing!"
+echo "✅ Created: $FILENAME"
+echo "→ Open in VS Code: code $FILENAME"

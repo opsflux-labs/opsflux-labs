@@ -1,6 +1,17 @@
 ---
 title: "PAYFAST-002: Linux Networking Production Diagnostics"
 date: 2026-05-30
+summary: "Production network baseline audit — interfaces, routing, DNS, connections, iptables, tcpdump on payfast-devops-admin"
+difficulty: beginner
+duration: 90 mins
+tags:
+  - linux
+  - networking
+  - ss
+  - tcpdump
+  - iptables
+  - gcp
+  - dns 
 ---
 
 ## Scenario
@@ -33,63 +44,97 @@ SLA: Complete within current session
 
 ## Investigation
 
-PHASE 1 — Network Interface Audit
-bash# All interfaces — up or down
+# PHASE 1 — Network Interface Audit
+
+# All interfaces — up or down
+```bash
 ip link show
+```
 
 # IP addresses assigned to each interface
-ip addr show
+```bash
+ip addr show ens4
+```
 
 # Just the active interfaces with IPs
+```bash
 ip addr show | grep -E "inet |inet6 " | grep -v "127.0.0.1"
+```
 
 # Interface statistics — errors, drops, packets
+```bash
 ip -s link show
-What to look for:
+```
+
+# What to look for:
 
 Any interface showing errors or drops = hardware/driver issue
 Multiple interfaces = check which one carries default route
 ens4 or eth0 = your primary GCP interface
 
 
-PHASE 2 — Routing Table
-bash# Full routing table
+# PHASE 2 — Routing Table
+
+# Full routing table
+```bash
 ip route show
+```
 
 # Default gateway — where does traffic exit?
+```bash
 ip route show default
+```
 
 # Which interface and gateway handles traffic to Google DNS?
+```bash
 ip route get 8.8.8.8
+```
 
 # Which interface handles internal GCP metadata?
+```bash
 ip route get 169.254.169.254
-What to look for:
+```
 
+# What to look for:
+```bash
 Default route present via ens4 or eth0
 GCP metadata server (169.254.169.254) routed via link-local
 No duplicate default routes (split-brain routing)
+```
 
+# PHASE 3 — DNS Health Check
 
-PHASE 3 — DNS Health Check
-bash# What DNS servers is this VM using?
+# What DNS servers is this VM using?
+```bash
 cat /etc/resolv.conf
+```
 
 # Who is actually handling DNS resolution?
+```bash
 resolvectl status
+```
 
 # Test external DNS resolution
+```bash
 dig google.com +short
 dig google.com A +stats | grep "Query time"
+```
 
 # Test GCP internal DNS
+```bash
 dig metadata.google.internal +short
+```
 
 # Reverse DNS lookup on your own IP
+```bash
 curl -s ifconfig.me
+```
+
 # Then:
+```bash
 dig -x <YOUR_EXTERNAL_IP> +short
-What to look for:
+```
+
 
 Query time above 100ms = DNS latency issue
 systemd-resolved at 127.0.0.53 = normal for Ubuntu 22.04
