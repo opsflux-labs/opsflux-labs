@@ -1,0 +1,22 @@
+[0;1;32m●[0m docker.service - Docker Application Container Engine
+     Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (running)[0m since Sat 2026-05-30 05:28:25 UTC; 9min ago
+TriggeredBy: [0;1;32m●[0m docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 586 (dockerd)
+      Tasks: 9
+     Memory: 114.9M
+        CPU: 1.067s
+     CGroup: /system.slice/docker.service
+             └─586 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+
+May 30 05:28:24 payfast-devops-admin dockerd[586]: time="2026-05-30T05:28:24.948765058Z" level=info msg="Restoring containers: start."
+May 30 05:28:25 payfast-devops-admin dockerd[586]: time="2026-05-30T05:28:25.031527473Z" level=info msg="Deleting nftables IPv4 rules" error="exit status 1" output="Error: Could not process rule: No such file or directory\ndelete table ip docker-bridges"
+May 30 05:28:25 payfast-devops-admin dockerd[586]: time="2026-05-30T05:28:25.040568068Z" level=info msg="Deleting nftables IPv6 rules" error="exit status 1" output="Error: Could not process rule: No such file or directory\ndelete table ip6 docker-bridges"
+May 30 05:28:25 payfast-devops-admin dockerd[586]: time="2026-05-30T05:28:25.777648574Z" level=info msg="Loading containers: done."
+May 30 05:28:25 payfast-devops-admin dockerd[586]: time="2026-05-30T05:28:25.813165606Z" level=info msg="Docker daemon" commit=568f755 containerd-snapshotter=true storage-driver=overlayfs version=29.5.2
+May 30 05:28:25 payfast-devops-admin dockerd[586]: time="2026-05-30T05:28:25.814410189Z" level=info msg="Initializing buildkit"
+May 30 05:28:25 payfast-devops-admin dockerd[586]: time="2026-05-30T05:28:25.857172335Z" level=info msg="Completed buildkit initialization"
+May 30 05:28:25 payfast-devops-admin dockerd[586]: time="2026-05-30T05:28:25.871310086Z" level=info msg="Daemon has completed initialization"
+May 30 05:28:25 payfast-devops-admin dockerd[586]: time="2026-05-30T05:28:25.871410361Z" level=info msg="API listen on /run/docker.sock"
+May 30 05:28:25 payfast-devops-admin systemd[1]: Started Docker Application Container Engine.
