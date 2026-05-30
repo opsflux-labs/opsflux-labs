@@ -252,6 +252,29 @@ Cleared for Docker and Kubernetes workload onboarding.
 - 169.254.169.254 connections = GCP agents — always expected on GCP VMs
 - tcpdump flags [P.][.][S] tell you exactly what type of traffic is flowing
 
+## Command Reference
+| Command | What it does | When to use |
+|---|---|---|
+| `ip link show` | All interfaces + state | Interface audit, link down debug |
+| `ip addr show` | IPs assigned to interfaces | IP conflict, config verification |
+| `ip route show` | Full routing table | Routing issue, gateway debug |
+| `ip route get <IP>` | Routing decision for specific IP | Trace exactly how traffic exits |
+| `ip -s link show` | Interface stats with errors/drops | Packet loss investigation |
+| `cat /etc/resolv.conf` | Configured DNS servers | DNS misconfiguration debug |
+| `resolvectl status` | systemd-resolved DNS state | Modern DNS debugging Ubuntu |
+| `dig <host> +short` | Quick DNS resolution | DNS health check |
+| `dig @<server> <host> +stats` | DNS query against specific server | Compare resolvers, latency test |
+| `sudo ss -tanp` | All TCP connections + process | Connection audit, incident triage |
+| `sudo ss -s` | Socket summary statistics | Quick network health snapshot |
+| `sudo ss -tnp state established` | Active established connections | Who is connected right now |
+| `sudo iptables -L -n -v` | All firewall rules verbose | Firewall audit, Docker rules |
+| `sudo iptables -t nat -L -n -v` | NAT table rules | Docker networking debug |
+| `sudo tcpdump -i <if> -c 20 -n` | Capture 20 packets | Packet-level incident debug |
+| `ping -c 4 <host>` | ICMP connectivity test | Basic reachability check |
+| `nc -zv <host> <port>` | TCP port connectivity test | Service reachability without telnet |
+| `traceroute <host>` | Hop-by-hop path to destination | Routing loop, latency path debug |
+| `curl metadata.google.internal` | GCP VM metadata query | Instance identity, zone, SA lookup |
+
 #### Challenges
 
 ### Challenge 1 — Interface Health Report
