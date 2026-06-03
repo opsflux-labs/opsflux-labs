@@ -351,6 +351,43 @@ ls -l
 
 Linux permissions can also be set with numbers. This is faster and more precise than `+x`.
 
+Every file has 3 permission blocks:
+Owner    Group    Others
+ rwx      rwx      rwx
+Each block has 3 slots — r, w, x. Each slot is either on (1) or off (0).
+Think of it like 3 light switches:
+r = switch 1
+w = switch 2
+x = switch 3
+
+Convert each block to a number:
+| Switches | Binary | Number |
+|---|---|---|
+| rwx = all on | 111 | 7 |
+| rw- = r and w on, x off | 110 | 6 |
+| r-x = r and x on, w off | 101 | 5 |
+| r-- = only r on | 100 | 4 |
+| --x = only x on | 001 | 1 |
+| --- = all off | 000 | 0 |cd ~/opsflux-labs
+
+Three blocks = three numbers side by side:
+chmod 755
+        │││
+        ││└── Others = 5 = r-x
+        │└─── Group  = 5 = r-x
+        └──── Owner  = 7 = rwx
+chmod 644
+        │││
+        ││└── Others = 4 = r--
+        │└─── Group  = 4 = r--
+        └──── Owner  = 6 = rw-
+chmod 604
+        │││
+        ││└── Others = 4 = r--
+        │└─── Group  = 0 = ---
+        └──── Owner  = 6 = rw-
+
+
 | Number | Permission | Binary |
 |---|---|---|
 | 7 | rwx — full | 111 |
@@ -721,7 +758,7 @@ Attempt each one independently. Read the scenario, investigate, then write your 
 
 > You SSH into `boa-devops-admin` and run `kubectl get pods`. You get: `bash: kubectl: command not found`. What do you check first, and what command would you use to verify kubectl is installed and where it is?
 
-**Your answer:**
+which kubectl
 
 ---
 
@@ -729,7 +766,8 @@ Attempt each one independently. Read the scenario, investigate, then write your 
 
 > You need to run a deployment script at `/opt/boa/deploy.sh` but get `Permission denied`. What single command checks the permissions on that file, and what command would fix it so only the owner can execute it?
 
-**Your answer:**
+ls -l /opt/boa/deploy.sh
+chmod 100 /opt/boa/deploy.sh
 
 ---
 
@@ -737,7 +775,7 @@ Attempt each one independently. Read the scenario, investigate, then write your 
 
 > A config file at `/etc/boa/config.yaml` is owned by `root:root` with permissions `600`. Your user is `learning_gcp_devops`. Can you read it without `sudo`? What permission change (with the exact command) would let your user read it without changing the owner?
 
-**Your answer:**
+chmod 604 /etc/boa/config.yaml
 
 ---
 
@@ -745,7 +783,7 @@ Attempt each one independently. Read the scenario, investigate, then write your 
 
 > Someone tells you there's a hidden config folder in your home directory that contains GCP credentials. What command would you run to list all hidden folders in your home directory?
 
-**Your answer:**
+ls -la ~
 
 ---
 
@@ -753,7 +791,8 @@ Attempt each one independently. Read the scenario, investigate, then write your 
 
 > You're setting up a shared directory `/opt/boa-logs` that needs to be: owned by `learning_gcp_devops`, readable and writable by the group `devops`, and unreadable by everyone else. Write the exact two commands (`chown` and `chmod`) to set this up.
 
-**Your answer:**
+sudo chown learning_gcp_devops:devops /opt/boa-logs
+chmod 660 /opt/boa-logs
 
 ---
 
