@@ -1,4 +1,16 @@
-# BOA-001 — Linux Navigation & Permissions
+---
+title: "BOA-001: Linux Navigation & Permissions"
+date: 2026-06-03
+summary: "Navigate the Linux filesystem, understand file permissions, set ownership — Day 1 on boa-devops-admin"
+difficulty: beginner
+duration: 2 hours
+tags:
+  - linux
+  - permissions
+  - filesystem
+  - foundation
+  - boa
+---
 
 ---
 
