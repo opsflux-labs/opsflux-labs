@@ -1,3 +1,16 @@
+---
+title: "BOA-002: Processes, Services & systemd"
+date: 2026-06-04
+summary: "Investigate running processes, manage services with systemctl, kill processes, read logs with journalctl — Day 2 on boa-devops-admin"
+difficulty: beginner
+duration: 2 hours
+tags:
+  - linux
+  - processes
+  - systemd
+  - foundation
+---
+
 # BOA-002 — Processes, Services & systemd
 
 **File:** `BOA-002-processes-services-systemd.md`
