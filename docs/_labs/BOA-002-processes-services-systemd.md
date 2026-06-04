@@ -804,7 +804,9 @@ You've just been handed access to a new production VM. List all currently runnin
 How many services are running? Which ones look critical to keep running?
 
 ```
-Your answer:
+ps aux
+20 + services are running
+Systemd, SSHD and Docker are important services to keep running
 ```
 
 ---
@@ -815,7 +817,16 @@ A colleague says "there's a process called `containerd` running on the VM — is
 Find the process using `ps aux`, get its PID, then confirm the service status using `systemctl`.
 
 ```
-Your answer:
+ps aux | grep containerd
+root         452  0.1  0.8 1793620 34220 ?       Ssl  18:05   0:07 /usr/bin/containerd
+systemctl status containerd 
+Loaded: loaded (/lib/systemd/system/containerd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2026-06-04 18:05:19 UTC; 1h 15min ago
+       Docs: https://containerd.io
+   Main PID: 452 (containerd)
+      Tasks: 8
+     Memory: 36.7M
+        CPU: 7.120s
 ```
 
 ---
@@ -827,7 +838,18 @@ Find its PID. Try killing it gracefully first. If it doesn't die, use force kill
 Verify it's gone.
 
 ```
-Your answer:
+sleep 999 &
+[1] 9227
+
+ps au | grep sleep
+learnin+    9227  0.0  0.0   6192  2104 pts/0    S    19:05   0:00 sleep 999
+learnin+    9556  0.0  0.0   7008  2420 pts/0    S+   19:06   0:00 grep --color=auto 
+
+kill 9227
+[1]+  Terminated              sleep 999
+
+learning_gcp_devops@boa-devops-admin:~/opsflux-labs$ ps au | grep sleep
+learnin+    9634  0.0  0.0   7008  2420 pts/0    S+   19:06   0:00 grep --color=auto sleep      
 ```
 
 ---
@@ -838,7 +860,10 @@ Before a planned VM reboot, you need to confirm that both `docker` and `ssh` wil
 How do you verify this without actually rebooting?
 
 ```
-Your answer:
+sudo systemctl is-enabled docker
+enabled
+sudo systemctl is-enabled ssh
+enabled
 ```
 
 ---
@@ -850,7 +875,13 @@ You restart Docker and it comes back. But your team lead asks: "What caused the 
 How do you find the answer? Write the exact command(s) and describe what you would look for in the output.
 
 ```
-Your answer:
+sudo journalctl -u docker -n 50
+sudo journalctl -u docker --since "18:15" --until "18:20"
+Jun 04 18:18:31 boa-devops-admin dockerd[618]: time="2026-06-04T18:18:31.864261777Z" level=info msg="Processing signal 'terminated'"
+
+Jun 04 18:19:24 boa-devops-admin dockerd[3677]: time="2026-06-04T18:19:24.720072028Z" level=info msg="Starting up"
+
+The cause was SIGTERM — meaning someone (you) deliberately stopped it with systemctl stop docker. Not a crash, not a memory issue, not a bug — a clean intentional shutdown.
 ```
 
 ---
