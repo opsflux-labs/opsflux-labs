@@ -4,6 +4,9 @@ title: "BOA-004: Bash Scripting Basics"
 lab_id: BOA-004
 topic: Bash Scripting Basics
 order: 4
+difficulty: beginner
+description: "Write your first automation script — variables, loops, if/else, and functions to build a real service health checker for Bank of Anthos."
+tags: [linux, bash, scripting, automation, devops-foundation]
 ---
 
 # BOA-004 — Bash Scripting Basics
